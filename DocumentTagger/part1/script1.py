@@ -16,7 +16,8 @@ documents = [DIV_COMM, MAG_CART]
 # argument to re.compile. We're doing this because it's human beings who create
 # the metadata headers at the top of Project gutenberg docs, and we want to account 
 # for possibility of "title: Some Title", "Title: Some Title", and "TITLE: Some Title").
-title_search = re.compile(r'(title:\s*)(?P<title>.*)', re.IGNORECASE)
+#title_search = re.compile(r'(title:\s*)(?P<title>.*)', re.IGNORECASE)
+title_search = re.compile(r'(title:\s*)(?P<title>.*?)(Author:|Illustrator:|Translator:|Release Date:)', re.IGNORECASE|re.DOTALL)
 author_search = re.compile(r'(author:)(?P<author>.*)', re.IGNORECASE)
 translator_search = re.compile(r'(translator:)(?P<translator>.*)', re.IGNORECASE)
 illustrator_search = re.compile(r'(illustrator:)(?P<illustrator>.*)', re.IGNORECASE)
@@ -28,6 +29,7 @@ illustrator_search = re.compile(r'(illustrator:)(?P<illustrator>.*)', re.IGNOREC
 # if you need more explanation. It's a highly productive built in function, and there are
 # common problems that you'll encounter as a programmer that enumerate is great for.
 for i, doc in enumerate(documents):
+  #title = re.search(title_search, doc)
   title = re.search(title_search, doc).group('title')
   author = re.search(author_search, doc)
   translator = re.search(translator_search, doc)
@@ -39,6 +41,7 @@ for i, doc in enumerate(documents):
   if illustrator:
     illustrator = illustrator.group('illustrator')
   print "***" * 25
+  print title
   print "Here's the info for doc {}:".format(i)
   print "Title:  {}".format(title)
   print "Author(s): {}".format(author)
