@@ -7,12 +7,13 @@ print "Here are the months:", months
 print "Here are the months with the %%s formatter: %s" % months
 print "Here are the months with the %%r formatter: %r" % months
 
-print """
+anote = """
 There's something going on here.
 With the three double-quotes.
 We'll be able to type as much as we like.
 Even 4 lines if we want, or 5, or 6.
 """
+print anote
 
 print '.'*10
 print "String one,", "String two,", "String three"
