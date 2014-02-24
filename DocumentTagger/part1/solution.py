@@ -27,9 +27,13 @@ illustrator_search = re.compile(r'(illustrator:)(?P<illustrator>.*)', re.IGNOREC
 # Now we need to do something with the user supplied keywords
 # which we're getting with sys.argv. Remember, the script name itself
 # is at index 0 in sys.argv, so we'll slice everything from index 1 forward.
+pattern1 = r'(?:.*start of.*?\*\*\*)(?P<subdoc>.*)(?:\*\*\* end of)'
+#body_search = re.compile(r'(?:.*start of.*?complete)(.*)(?:end of)', re.IGNORECASE|re.DOTALL)
+body_search = re.compile(pattern1, re.IGNORECASE|re.DOTALL)
 searches = {}
 for kw in sys.argv[1:]:
-  searches[kw] = re.compile(r'\b' + kw + r'\b', re.IGNORECASE)
+	pattern = r'\b' + kw + r'\b'
+	searches[kw] = re.compile(pattern, re.IGNORECASE)
 
 # now iterate over the documents and extract and print output about metadata
 # for each one. Note the use of enumerate here, which gives you a counter variable
@@ -38,25 +42,25 @@ for kw in sys.argv[1:]:
 # if you need more explanation. It's a highly productive built in function, and there are
 # common problems that you'll encounter as a programmer that enumerate is great for.
 for i, doc in enumerate(documents):
-  #title = re.search(title_search, doc)
-  title = re.search(title_search, doc).group('title')
-  author = re.search(author_search, doc)
-  translator = re.search(translator_search, doc)
-  illustrator = re.search(illustrator_search, doc)
-  if author: 
-    author = author.group('author')
-  if translator:
-    translator = translator.group('translator')
-  if illustrator:
-    illustrator = illustrator.group('illustrator')
-  print "***" * 25
-  #print "Here's the info for doc {}:".format(i)
-  print "The title of the text is {}".format(title)
-  print "The author(s) is {}".format(author)
-  print "The translator(s) is {}".format(translator)
-  print "The illustrator(s) is {}".format(illustrator)
-  print ""
-  print "Here's the counts for the keywords you searched for"
-  for search in searches:
-    print "\"{0}\": {1}".format(search, len(re.findall(searches[search], doc)))
-
+	#title = re.search(title_search, doc)
+	title = re.search(title_search, doc).group('title')
+	author = re.search(author_search, doc)
+	translator = re.search(translator_search, doc)
+	illustrator = re.search(illustrator_search, doc)
+	if author: 
+		author = author.group('author')
+	if translator:
+		translator = translator.group('translator')
+	if illustrator:
+		illustrator = illustrator.group('illustrator')
+	print "***" * 25
+	#print "Here's the info for doc {}:".format(i)
+	print "The title of the text is {}".format(title)
+	print "The author(s) is {}".format(author)
+	print "The translator(s) is {}".format(translator)
+	print "The illustrator(s) is {}".format(illustrator)
+	print ""
+	print "Here's the counts for the keywords you searched for"
+	subdoc = re.search(body_search, doc).group('subdoc')
+	for search in searches:
+	    print "\"{0}\": {1}".format(search, len(re.findall(searches[search], subdoc)))
