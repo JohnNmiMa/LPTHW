@@ -5,7 +5,7 @@ import os
 from optparse import OptionParser
 
 
-def parse_options(argv):
+def parse_options():
     parser = OptionParser()
     parser.add_option("-d", "--dir", dest="dir", help="Directory of text files")
     (options,args) = parser.parse_args()
@@ -100,11 +100,12 @@ class TextFiles:
         path = os.path.join(self.directory, self.dirs[self.index]) 
         self.index += 1
         with open(path, 'r') as f:
-            return f.read()  # get the text contents of the file, and close file after return
+            return f.read()  # get the text contents of the file 
+                             # and close file immediately after after return
 
 
 def main(argv=sys.argv):
-    options = parse_options(argv)
+    options = parse_options()
     for full_text in TextFiles(options['directory']):
         dr = DocumentReporter(options['keywords'], full_text)
         dr.report()
