@@ -25,7 +25,7 @@ class DocumentReporter:
 
     def __compile_regex_patterns(self):
         """ Compile the document meta data patterns """
-        pattern = r'(title:\s*)(?P<title>.*?)(Author:|Illustrator:|Translator:|Release Date:)'
+        pattern = r'(title:\s*)(?P<title>.*?)\n*(Author:|Illustrator:|Translator:|Release Date:)'
         title_search = re.compile(pattern, re.IGNORECASE|re.DOTALL)
         author_search = re.compile(r'(author:)(?P<author>.*)', re.IGNORECASE)
         translator_search = re.compile(r'(translator:)(?P<translator>.*)', re.IGNORECASE)
@@ -92,8 +92,8 @@ class TextFiles:
     def next(self):
         while self.index < len(self.dirs):
             if self.dirs[self.index].endswith('.txt'):
-                break;
-            index += 1
+                break
+            self.index += 1
         else:
             raise StopIteration
 

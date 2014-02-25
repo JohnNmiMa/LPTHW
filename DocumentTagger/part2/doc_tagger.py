@@ -15,7 +15,7 @@ dir = options.dir
 # PREPARE OUR REGEXES FOR METADATA SEARCHES #
 # we'll use re.compile() here, which allows you to assign a regex pattern
 # to a variable. We'll do this for each our metadata fields.
-pattern = r'(title:\s*)(?P<title>.*?)(Author:|Illustrator:|Translator:|Release Date:)'
+pattern = r'(title:\s*)(?P<title>.*?)\n*(Author:|Illustrator:|Translator:|Release Date:)'
 title_search = re.compile(pattern, re.IGNORECASE|re.DOTALL)
 author_search = re.compile(r'(author:)(?P<author>.*)', re.IGNORECASE)
 translator_search = re.compile(r'(translator:)(?P<translator>.*)', re.IGNORECASE)
