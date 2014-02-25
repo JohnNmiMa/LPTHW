@@ -40,7 +40,7 @@ class DocumentReporter:
         searches = {kw: re.compile(r'\b' + kw + r'\b', re.IGNORECASE) for kw in self.keywords}
 
         return dict(title=title_search, author=author_search, translator=translator_search,
-                    illustrator = illustrator_search, body = body_search, searches = searches)
+                    illustrator=illustrator_search, body=body_search, searches=searches)
 
     def __search_metadata(self, pattern_name, text):
         """ Use regex to seach for patterns in the text """
