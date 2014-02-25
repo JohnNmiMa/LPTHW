@@ -16,11 +16,11 @@ def parse_options():
 
 class DocumentReporter:
     """ Useful for producing document reports """
-    def __init__(self, keywords, doc_text):
+    def __init__(self, keywords, textdict):
         """ Constructor - stuff gets done in the right order """
         self.keywords = keywords
         self.patterns = self.__compile_regex_patterns()
-        self.metadata = self.__get_metadata(doc_text)
+        self.metadata = self.__get_metadata(textdict)
         self.keyword_counts = self.__count_keywords()
 
     def __compile_regex_patterns(self):
@@ -50,14 +50,16 @@ class DocumentReporter:
         else:
             return None
 
-    def __get_metadata(self, doc_text):
+    def __get_metadata(self, textdict):
         """ Extract metadata from the text file. """
+        doc_text = textdict['full_text']
+        file_name = textdict['file_name']
         title = self.__search_metadata('title', doc_text)
         author = self.__search_metadata('author', doc_text)
         translator = self.__search_metadata('translator', doc_text)
         illustrator = self.__search_metadata('illustrator', doc_text)
         body_text = self.__search_metadata('body', doc_text)
-        return dict(title=title, author=author, translator=translator,
+        return dict(file_name=file_name, title=title, author=author, translator=translator,
                     illustrator=illustrator, body_text=body_text)
 
     def __count_keywords(self):
@@ -69,7 +71,7 @@ class DocumentReporter:
         return counts
 
     def report(self):
-        print "***"*25
+        print ('{:*^50}').format(" File" + self.metadata['file_name'] + " ")
         print "The title of the text is {}".format(self.metadata['title'])
         print "The author(s) is {}".format(self.metadata['author'])
         print "The translator(s) is {}".format(self.metadata['translator'])
@@ -81,8 +83,8 @@ class DocumentReporter:
 
 
 class TextFiles:
-    """ Useful for returning a list of text documents in a directory """
-    """ Can be iterated """
+    """ Useful for returning a list of text documents in a directory
+        Can be iterated """
     def __init__(self, directory):
         self.directory = directory
         self.dirs = os.listdir(self.directory)
@@ -97,17 +99,18 @@ class TextFiles:
         else:
             raise StopIteration
 
-        path = os.path.join(self.directory, self.dirs[self.index]) 
+        index = self.index
         self.index += 1
+        path = os.path.join(self.directory, self.dirs[index]) 
         with open(path, 'r') as f:
-            return f.read()  # get the text contents of the file 
-                             # and close file immediately after after return
+            # get the text contents of the file - file closes immediately after after the return
+            return dict(file_name=self.dirs[index], full_text=f.read())
 
 
 def main(argv=sys.argv):
     options = parse_options()
-    for full_text in TextFiles(options['directory']):
-        dr = DocumentReporter(options['keywords'], full_text)
+    for textdict in TextFiles(options['directory']):
+        dr = DocumentReporter(options['keywords'], textdict)
         dr.report()
 
 
