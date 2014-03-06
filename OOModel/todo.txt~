@@ -1,0 +1,73 @@
+1) Create class exercise - DONE
+2) Create the base class
+3) Create interface to add auto type
+4) Create sports car
+5) Create truck
+6) Make each step take time, and run to completion
+7) Add dependencies, and then start all tasks together,
+   letting tasks that can be done in parallel run, and
+   those that must wait
+--------------
+* Create base and sub classes
+* Add base class method
+* Add class data
+* Add instance data
+* Use baseclass data without overriding
+* Use baseclass method without overriding
+* Use subclass method that uses baseclass method to implement the template
+  method pattern 
+* Use private methods, to hide from base classes
+
+---------------
+
+Project: build a car. Build a generic car, a sports car, a truck
+* baseclass: Auto
+* sub class: SportsCar, Truck
+* Template Algorithm:
+* 1) Assemble engine
+*    1) Cast or Machine block
+*    2) Bore and stroke block
+*    3) Install pistons, crank, valves, seals
+*    4) Install timing chain
+*    5) Install fuel intake system
+*    6) Install electronic components
+* 2) Assemble chassis
+*    1) Build frame
+*    2) Install brake tubing
+*    3) Install fuel tubing
+*    4) Install firewall
+*    5) Install engine
+*    6) Install clutch and/or transmission
+*    7) Install driveshaft
+*    8) Install differential
+*    9) Install suspension
+*    10) Install exhaust system
+*    11) Install stearing assembly
+*    12) Install gas tank and fuel pump
+*    13) Install drive axles
+*    14) Install wheel hub
+*    15) Install brake system
+*    16) Install Universal or CV joints
+*    17) Apply chassis undercoating
+* 3) Install wiring harness
+* 4) Install cooling system
+* 5) Assemble body panels
+* 6) Assemble interior
+*    1) Assemble dashboard
+*    2) Install surface covering
+*    3) Install carpeting
+*    4) Install seating
+* 7) Install doors
+* 8) Add exterior lighting assemblies
+     1) Add Headlamp assemblies
+     2) Add Tail light assemblies
+     3) Add Side Marker lights
+     4) Add Fog lamps
+     5) Add Parking lights
+     6) Add Turn Signal lists
+* 9) Install wheels
+     1) Install tires on wheels
+* 10) Install windshield
+* 11) Add fluids
+* 12) Test Drive
+
