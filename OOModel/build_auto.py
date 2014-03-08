@@ -1,29 +1,22 @@
-from build_engine import BuildEngine
-from build_chassis import BuildChassis
+#!/usr/local/bin/python
+import sys
+from optparse import OptionParser
+import automobile
+import sportscar
 
-class BuildAuto:
-    state = "not started"
-    def build_state(self):
-        return self.state
+def parse_options():
+    parser = OptionParser()
+    parser.add_option("-t", "--type", dest="type", help="Type of automobile to build")
+    (options,args) = parser.parse_args()
+    if (not options.type):
+        parser.error("You need to supply a type of automobile to build: --type")
+    return dict(type=options.type)
 
-    def build_auto(self):
-        print """
-        *******************************************
-        *** Start building a generic automobile ***
-        *******************************************
-        """
-        self.build_engine()
+options = parse_options()
+if options['type'].upper() == 'sports'.upper():
+    auto = sportscar.SportsCar()
+else:
+    auto = automobile.Automobile()
 
-    def build_engine(self):
-        engine = BuildEngine()
-        print "*** Start building the engine ***"
-        self.state = "building engine"
-        engine.build()
-        self.state = "engine built"
+auto.build()
 
-    def build_chasis(self):
-        engine = BuildChassis()
-        print "*** Start building the chassis ***"
-        self.state = "building chassis"
-        engine.build()
-        self.state = "chassis built"

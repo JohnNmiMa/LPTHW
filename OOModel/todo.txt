@@ -1,5 +1,5 @@
 1) Create class exercise - DONE
-2) Create the base class
+2) Create the base class - DONE
 3) Create interface to add auto type
 4) Create sports car
 5) Create truck
@@ -52,22 +52,25 @@ Project: build a car. Build a generic car, a sports car, a truck
 * 3) Install wiring harness
 * 4) Install cooling system
 * 5) Assemble body panels
-* 6) Assemble interior
-*    1) Assemble dashboard
-*    2) Install surface covering
+* 6) Paint panels
+* 7) Assemble interior
+*    1) Install dashboard
+*    2) Install surface coverings
 *    3) Install carpeting
 *    4) Install seating
-* 7) Install doors
-* 8) Add exterior lighting assemblies
-     1) Add Headlamp assemblies
-     2) Add Tail light assemblies
-     3) Add Side Marker lights
-     4) Add Fog lamps
-     5) Add Parking lights
-     6) Add Turn Signal lists
-* 9) Install wheels
-     1) Install tires on wheels
-* 10) Install windshield
-* 11) Add fluids
-* 12) Test Drive
+*    5) Test lighting
+* 8) Install doors
+* 9) Add exterior lighting assemblies
+*    1) Add Headlamp assemblies
+*    2) Add Tail light assemblies
+*    3) Add Side Marker lights
+*    4) Add Fog lamps
+*    5) Add Parking lights
+*    6) Add Turn Signal lights
+* 10) Install wheels
+*    1) Install tires on wheels
+*    2) Mount wheel assembly
+* 11) Install windshield & wipers
+* 12) Add fluids
+* 13) Test Drive
 
