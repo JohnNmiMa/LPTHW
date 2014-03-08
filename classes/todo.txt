@@ -1,12 +1,12 @@
 Class definition
     class and instance variables
-    constructors
     class and instance objects
     Private attributes
     Class/Instance variables
     Properties, Getters/Setters
 Class namespaces
 Class inheritance
+    constructors
     Attribute (variable/method) overloading
 Static and Class Methods
 Abstract classes

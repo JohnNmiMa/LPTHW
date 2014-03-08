@@ -1,12 +1,11 @@
 1) Create class exercise - DONE
 2) Create the base class - DONE
-3) Create interface to add auto type
-4) Create sports car
-5) Create truck
-6) Make each step take time, and run to completion
-7) Add dependencies, and then start all tasks together,
+3) Create interface to add auto type - DONE
+4) Create sports car - DONE
+5) Add dependencies, and then start all tasks together,
    letting tasks that can be done in parallel run, and
-   those that must wait
+   those that must wait - DONE
+6) Make each step take time, and run to completion
 --------------
 * Create base and sub classes
 * Add base class method
