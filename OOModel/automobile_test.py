@@ -3,7 +3,7 @@ import pdb
 from automobile import Automobile
 
 class BuildAutoTest(unittest.TestCase):
-    rate = 1000.0
+    rate = 2000.0
 
     def test_auto_factory(self):
         auto = Automobile('serial', BuildAutoTest.rate)
