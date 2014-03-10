@@ -2,7 +2,7 @@ from threading import Thread, Event
 
 # A decorator for each build method to set the state progress
 def set_state(func):
-    def inner(self):
+    def build_wrapper(self):
         event = None
         if func.__name__ == 'build_engine':
             start_state = "building engine"; end_state = "engine built"
@@ -38,7 +38,8 @@ def set_state(func):
         func(self)                # Build part of the automobile
         self.state = end_state;   # Set the end state after building is finished
         if event: event.set()
-    return inner
+
+    return build_wrapper
 
 class Automobile(object):
     type = "generic automobile"
@@ -92,7 +93,7 @@ class Automobile(object):
         af_thread = Thread(target=self.add_fluids)
         td_thread = Thread(target=self.test_drive)
 
-        # Start all threads
+        # Start all threads - start building the auto
         be_thread.start()
         bt_thread.start()
         bf_thread.start()
@@ -103,7 +104,7 @@ class Automobile(object):
         af_thread.start()
         td_thread.start()
 
-        # Wait for all threads to finished
+        # Wait for all threads to finish
         be_thread.join()
         bt_thread.join()
         bf_thread.join()
