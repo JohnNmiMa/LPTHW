@@ -3,37 +3,56 @@ from threading import Thread, Event
 # A decorator for each build method to set the state progress
 def set_state(func):
     def inner(self):
+        event = None
         if func.__name__ == 'build_engine':
             start_state = "building engine"; end_state = "engine built"
+            event = self.built_engine_event
         elif func.__name__ == 'build_transmission':
             start_state = "building transmission"; end_state = "transmission built"
+            event = self.built_transmission_event
         elif func.__name__ == 'build_frame':
             start_state = "building frame"; end_state = "frame built"
-        elif func.__name__ == 'build_chassis':
-            start_state = "building chassis"; end_state = "chassis built"
+            event = self.built_frame_event
+        elif func.__name__ == 'build_chassis_part1':
+            start_state = "building first part of chassis"; end_state = "chassis part 1 built"
+            event = self.built_chassis_part1_event
+        elif func.__name__ == 'build_chassis_part2':
+            start_state = "building second part of chassis"; end_state = "chassis part 2 built"
+            event = self.built_chassis_part2_event
+        elif func.__name__ == 'build_chassis_part3':
+            start_state = "building third part of chassis"; end_state = "chassis part 3 built"
+            event = self.built_chassis_part3_event
         elif func.__name__ == 'post_chassis_assembly':
             start_state = "performing post chassis assembly";
             end_state = "post chassis assembly complete"
+            event = self.post_chassis_assembled_event
         elif func.__name__ == 'add_fluids':
             start_state = "adding fluids"; end_state = "fluids added"
+            event = self.fluids_added_event
         elif func.__name__ == 'test_drive':
             start_state = "testing automobile"; end_state = "Beep Beep"
+            event = self.test_drive_complete_event
+
         self.state = start_state; # Set the start state before building starts
         #print "Wrapping {}".format(func.__name__)
         func(self)                # Build part of the automobile
         self.state = end_state;   # Set the end state after building is finished
+        if event: event.set()
     return inner
 
 class Automobile(object):
     type = "generic automobile"
 
-    def __init__(self):
+    def __init__(self, mode):
+        self.mode = mode
         self.state = "not started"
         self.type = "generic automobile"
         self.built_engine_event = Event()
         self.built_transmission_event = Event()
         self.built_frame_event = Event()
-        self.built_chassis_event = Event()
+        self.built_chassis_part1_event = Event()
+        self.built_chassis_part2_event = Event()
+        self.built_chassis_part3_event = Event()
         self.post_chassis_assembled_event = Event()
         self.fluids_added_event = Event()
         self.test_drive_complete_event = Event()
@@ -44,48 +63,67 @@ class Automobile(object):
     def build_state(self):
         return self.state
 
-    def build(self):
-        print """
-*******************************************
-*** Start building a {} ***
-*******************************************
-        """.format(self.type)
-        # A template method used to build automobiles
-        #self.build_engine()
+    def build_serial(self):
+        # A template method used to build automobiles in serial order
+
+        self.build_engine()
+        self.build_transmission()
+        self.build_frame()
+        self.build_chassis_part1()
+        self.build_chassis_part2()
+        self.build_chassis_part3()
+        self.post_chassis_assembly()
+        self.add_fluids()
+        self.test_drive()
+
+    def build_parallel(self):
+        # A template method used to build automobiles in parallel
+        # Kick off a bunch of threads, and use events to synchronize the
+        # order in which the car is built
+
+        # Create threads
         be_thread = Thread(target=self.build_engine)
-        be_thread.start()
-
-        #self.build_transmission()
         bt_thread = Thread(target=self.build_transmission)
-        bt_thread.start()
-
-        #self.build_frame()
         bf_thread = Thread(target=self.build_frame)
-        bf_thread.start()
-
-        #self.build_chassis()
-        bc_thread = Thread(target=self.build_chassis)
-        bc_thread.start()
-        
-        #self.post_chassis_assembly()
+        bc1_thread = Thread(target=self.build_chassis_part1)
+        bc2_thread = Thread(target=self.build_chassis_part2)
+        bc3_thread = Thread(target=self.build_chassis_part3)
         pca_thread = Thread(target=self.post_chassis_assembly)
-        pca_thread.start()
-        
-        #self.add_fluids()
         af_thread = Thread(target=self.add_fluids)
-        af_thread.start()
-        
-        #self.test_drive()
         td_thread = Thread(target=self.test_drive)
+
+        # Start all threads
+        be_thread.start()
+        bt_thread.start()
+        bf_thread.start()
+        bc1_thread.start()
+        bc2_thread.start()
+        bc3_thread.start()
+        pca_thread.start()
+        af_thread.start()
         td_thread.start()
 
+        # Wait for all threads to finished
         be_thread.join()
         bt_thread.join()
         bf_thread.join()
-        bc_thread.join()
+        bc1_thread.join()
+        bc2_thread.join()
+        bc3_thread.join()
         pca_thread.join()
         af_thread.join()
         td_thread.join()
+
+    def build(self):
+        start_msg = '*** Start building a {} in {} ***'.format(self.type, self.mode)
+        print '*' * (len(start_msg))
+        print start_msg
+        print '*' * (len(start_msg))
+
+        if self.mode == 'parallel':
+            self.build_parallel()
+        else:
+            self.build_serial()
         
         print "*** Finished building the automobile ***"
 
@@ -99,30 +137,40 @@ class Automobile(object):
         print "    Installing carburetor"
         print "    Installing distributor, sparkwires, sparkplugs, coil"
         print "    Installing belts"
-        self.built_engine_event.set() # let others know the engine is built
 
     @set_state
     def build_transmission(self):
-        print "*** Start building transmission ***"
-        self.built_transmission_event.set()
+        print "*** Start building clutch and transmission ***"
+        print "    Building transmission"
+        print "    Building clutch"
 
     @set_state
     def build_frame(self):
         print "*** Start frame assembly ***"
-        print "    Frame build: Building frame"
-        self.built_frame_event.set()
+        print "    Building frame"
 
     @set_state
-    def build_chassis(self):
-        print "*** Start assembling the chassis ***"
+    def build_chassis_part1(self):
         self.built_frame_event.wait()
+        print "*** Start assembling the first part of the chassis ***"
         print "    Installing brake lining"
         print "    Installing fuel lining"
         print "    Installing firewall"
         print "    Installing wheel hub assymbly"
-        self.built_engine_event.wait()
+
+    @set_state
+    def build_chassis_part2(self):
+        # Wait for both the engine and first part of chassis to be built
+        self.built_engine_event.wait() 
+        self.built_chassis_part1_event.wait()
+        print "*** Start assembling the second part of the chassis ***"
         print "    Installing engine"
+
+    @set_state
+    def build_chassis_part3(self):
         self.built_transmission_event.wait()
+        self.built_chassis_part2_event.wait()
+        print "*** Start assembling the third part of the chassis ***"
         print "    Installing clutch and transmission"
         print "    Installing driveshaft"
         print "    Installing differential"
@@ -134,11 +182,10 @@ class Automobile(object):
         print "    Installing brake system"
         print "    Installing CV joints"
         print "    Applying chassis undercoating"
-        self.built_chassis_event.set() # let others know the chassis is built
 
     @set_state
     def post_chassis_assembly(self):
-        self.built_chassis_event.wait()
+        self.built_chassis_part3_event.wait()
         print "*** Start post chassis assembly ***"
         print "    Installing wiring harness"
         print "    Installing cooling system"
@@ -146,26 +193,30 @@ class Automobile(object):
         print "    Paint body"
         print "    Installing clutch and transmission"
 
-        # All three subassemblies can be done in parallel
-        #self.assemble_interior()
-        ai_thread = Thread(target=self.assemble_interior)
-        ai_thread.start()
+        if self.mode == 'parallel':
+            # All three subassemblies can be done in parallel
+            #self.assemble_interior()
+            ai_thread = Thread(target=self.assemble_interior)
+            ai_thread.start()
 
-        #self.install_exterior_lighting()
-        iel_thread = Thread(target=self.install_exterior_lighting)
-        iel_thread.start()
+            #self.install_exterior_lighting()
+            iel_thread = Thread(target=self.install_exterior_lighting)
+            iel_thread.start()
 
-        #self.install_wheel_assembly()
-        iwa_thread = Thread(target=self.install_wheel_assembly)
-        iwa_thread.start()
+            #self.install_wheel_assembly()
+            iwa_thread = Thread(target=self.install_wheel_assembly)
+            iwa_thread.start()
 
-        ai_thread.join()
-        iel_thread.join()
-        iwa_thread.join()
+            ai_thread.join()
+            iel_thread.join()
+            iwa_thread.join()
+        else:
+            self.assemble_interior()
+            self.install_exterior_lighting
+            self.install_wheel_assembly
 
         print "    Installing doors"
         print "    Installing windshield and wipers"
-        self.post_chassis_assembled_event.set() # let others know the post chassis assy is done
 
     def assemble_interior(self):
         print "*   Assembling Interior"
@@ -202,7 +253,6 @@ class Automobile(object):
         print "    Adding wiper fluid"
         print "    Adding break fluid"
         print "    Adding differential oil"
-        self.fluids_added_event.set() # let others know the fluids are added
 
     @set_state
     def test_drive(self):
@@ -218,5 +268,4 @@ class Automobile(object):
         print "    Testing on track"
         print "    Testing off road"
         print "    Testing in city"
-        self.test_drive_complete_event.set() # let others know the test drive is done
 
