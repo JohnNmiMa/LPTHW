@@ -3,12 +3,14 @@ import pdb
 from automobile import Automobile
 
 class BuildAutoTest(unittest.TestCase):
+    rate = 1000.0
+
     def test_auto_factory(self):
-        auto = Automobile('serial')
+        auto = Automobile('serial', BuildAutoTest.rate)
         self.assertEqual("not started", auto.build_state())
 
     def test_build_auto(self):
-        auto = Automobile('serial')
+        auto = Automobile('serial', BuildAutoTest.rate)
 
         auto.build_engine()
         self.assertEqual("engine built", auto.build_state())
@@ -36,17 +38,28 @@ class BuildAutoTest(unittest.TestCase):
         self.assertEqual("Beep Beep", auto.build_state())
 
     def test_build_serial(self):
-        auto = Automobile('serial')
+        auto = Automobile('serial', BuildAutoTest.rate)
         auto.build()
         self.assertEqual("Beep Beep", auto.build_state())
 
     def test_build_parallel(self):
-        auto = Automobile('parallel')
+        auto = Automobile('parallel', BuildAutoTest.rate)
         auto.build()
         self.assertEqual("Beep Beep", auto.build_state())
 
     def test_engine_trans_frame_parallel_build_in_any_order(self):
-        auto = Automobile('parallel')
+        auto = Automobile('parallel', BuildAutoTest.rate)
+        auto.build_frame()
+        self.assertEqual("frame built", auto.build_state())
+
+        auto.build_transmission()
+        self.assertEqual("transmission built", auto.build_state())
+
+        auto.build_engine()
+        self.assertEqual("engine built", auto.build_state())
+
+    def test_engine_trans_frame_serial_build_in_any_order(self):
+        auto = Automobile('serialparallel', BuildAutoTest.rate)
         auto.build_frame()
         self.assertEqual("frame built", auto.build_state())
 

@@ -2,13 +2,13 @@ from threading import Thread, Event
 from automobile import Automobile, set_state
 
 class SportsCar(Automobile):
-    def __init__(self, mode):
-        Automobile.__init__(self, mode)
+    def __init__(self, mode, rate):
+        Automobile.__init__(self, mode, rate)
         self.type = "sports car"
 
     @set_state
     def build_engine(self):
-        print "*** Start building engine ***"
+        print "*** Start building engine ***"; self.build_time(17)
         print "    Machining aluminum engine block"
         print "    Boring and stroking the engine block"
         print "    Installing titanium pistons rods and valves, balanced crank, seals"
@@ -16,12 +16,22 @@ class SportsCar(Automobile):
         print "    Installing direct fuel injection"
         print "    Installing electronic ignitions system"
         print "    Installing belts"
-        print "    Building monocoque frame"
+
+    @set_state
+    def build_transmission(self):
+        print "*** Start building clutch and transmission ***"; self.build_time(14)
+        print "    Building transmission"
+        print "    Building clutch"
+        
+    @set_state
+    def build_frame(self):
+        print "*** Start frame assembly ***"; self.build_time(22)
+        print "    Building graphite monocoque frame"
 
     @set_state
     def build_chassis_part1(self):
         self.built_frame_event.wait()
-        print "*** Start assembling the first part of the chassis ***"
+        print "*** Start assembling the first part of the chassis ***"; self.build_time(10)
         print "    Installing brake lining"
         print "    Installing fuel lining"
         print "    Installing firewall"
@@ -31,14 +41,14 @@ class SportsCar(Automobile):
     def build_chassis_part2(self):
         self.built_engine_event.wait() 
         self.built_chassis_part1_event.wait()
-        print "*** Start assembling the second part of the chassis ***"
+        print "*** Start assembling the second part of the chassis ***"; self.build_time(6)
         print "    Installing dohc flat-6, 315bhp 266lb-ft @ 4500 rpm mid-engine"
 
     @set_state
     def build_chassis_part3(self):
         self.built_transmission_event.wait()
         self.built_chassis_part2_event.wait()
-        print "*** Start assembling the third part of the chassis ***"
+        print "*** Start assembling the third part of the chassis ***"; self.build_time(10)
         print "    Installing dual clutch transmission"
         print "    Installing driveshaft"
         print "    Installing limited-slip differential"
@@ -56,7 +66,7 @@ class SportsCar(Automobile):
     @set_state
     def post_chassis_assembly(self):
         self.built_chassis_part3_event.wait() # let others know the first part of the chassis is built
-        print "*** Start post chassis assembly ***"
+        print "*** Start post chassis assembly ***"; self.build_time(18.5)
         print "    Installing wiring harness"
         print "    Installing cooling system"
         print "    Installing body panels"
@@ -89,7 +99,7 @@ class SportsCar(Automobile):
         print "    Installing windshield and wipers"
 
     def assemble_interior(self):
-        print "*   Assembling Interior"
+        print "*   Assembling Interior"; self.build_time(36)
         print "    Installing dashboard"
         print "    Installing 10 speaker surround sound system"
         print "    Installing instrument cluster"
@@ -100,7 +110,7 @@ class SportsCar(Automobile):
         print "    Testing interior lighting"
 
     def install_wheel_assembly(self):
-        print "*   Installing Wheel Assembly *"
+        print "*   Installing Wheel Assembly *"; self.build_time(4)
         print "    Installing 235/35ZR-20 / 265/35Z/R-20 Pirelli PZero tires on wheels"
         print "    Mounting cast alloy 20\" wheels"
 
@@ -108,6 +118,6 @@ class SportsCar(Automobile):
     def test_drive(self):
         #Automobile.test_drive(self)
         super(SportsCar, self).test_drive()
-        print "    Testing on Nurburgring"
+        print "    Testing on Nurburgring"; self.build_time(1.5)
         self.state = "Vroom Vroom"
 

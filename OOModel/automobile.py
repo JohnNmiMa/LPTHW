@@ -1,4 +1,5 @@
 from threading import Thread, Event
+import time
 
 # A decorator for each build method to set the state progress
 def set_state(func):
@@ -44,8 +45,9 @@ def set_state(func):
 class Automobile(object):
     type = "generic automobile"
 
-    def __init__(self, mode):
+    def __init__(self, mode, rate):
         self.mode = mode
+        self.rate = rate
         self.state = "not started"
         self.type = "generic automobile"
         self.built_engine_event = Event()
@@ -63,6 +65,9 @@ class Automobile(object):
 
     def build_state(self):
         return self.state
+
+    def build_time(self, hours):
+        time.sleep(hours * 60.0 / self.rate)
 
     def build_serial(self):
         # A template method used to build automobiles in serial order
@@ -116,7 +121,7 @@ class Automobile(object):
         td_thread.join()
 
     def build(self):
-        start_msg = '*** Start building a {} in {} ***'.format(self.type, self.mode)
+        start_msg = '*** Start building a {} in {}: build rate = {:.1f}X ***'.format(self.type, self.mode, self.rate)
         print '*' * (len(start_msg))
         print start_msg
         print '*' * (len(start_msg))
@@ -130,7 +135,7 @@ class Automobile(object):
 
     @set_state
     def build_engine(self):
-        print "*** Start building engine ***"
+        print "*** Start building engine ***"; self.build_time(4)
         print "    Casting engine block"
         print "    Boring and stroking the engine block"
         print "    Installing pistons, crank, valves, seals"
@@ -141,19 +146,19 @@ class Automobile(object):
 
     @set_state
     def build_transmission(self):
-        print "*** Start building clutch and transmission ***"
+        print "*** Start building clutch and transmission ***"; self.build_time(6)
         print "    Building transmission"
         print "    Building clutch"
 
     @set_state
     def build_frame(self):
-        print "*** Start frame assembly ***"
+        print "*** Start frame assembly ***"; self.build_time(2)
         print "    Building frame"
 
     @set_state
     def build_chassis_part1(self):
         self.built_frame_event.wait()
-        print "*** Start assembling the first part of the chassis ***"
+        print "*** Start assembling the first part of the chassis ***"; self.build_time(.5)
         print "    Installing brake lining"
         print "    Installing fuel lining"
         print "    Installing firewall"
@@ -164,14 +169,14 @@ class Automobile(object):
         # Wait for both the engine and first part of chassis to be built
         self.built_engine_event.wait() 
         self.built_chassis_part1_event.wait()
-        print "*** Start assembling the second part of the chassis ***"
+        print "*** Start assembling the second part of the chassis ***"; self.build_time(0.2)
         print "    Installing engine"
 
     @set_state
     def build_chassis_part3(self):
         self.built_transmission_event.wait()
         self.built_chassis_part2_event.wait()
-        print "*** Start assembling the third part of the chassis ***"
+        print "*** Start assembling the third part of the chassis ***"; self.build_time(3.4)
         print "    Installing clutch and transmission"
         print "    Installing driveshaft"
         print "    Installing differential"
@@ -187,7 +192,7 @@ class Automobile(object):
     @set_state
     def post_chassis_assembly(self):
         self.built_chassis_part3_event.wait()
-        print "*** Start post chassis assembly ***"
+        print "*** Start post chassis assembly ***"; self.build_time(2)
         print "    Installing wiring harness"
         print "    Installing cooling system"
         print "    Installing body panels"
@@ -220,7 +225,7 @@ class Automobile(object):
         print "    Installing windshield and wipers"
 
     def assemble_interior(self):
-        print "*   Assembling Interior"
+        print "*   Assembling Interior"; self.build_time(2.5)
         print "    Installing dashboard"
         print "    Installing sound system"
         print "    Installing instruments"
@@ -231,7 +236,7 @@ class Automobile(object):
         print "    Testing interior lighting"
 
     def install_exterior_lighting(self):
-        print "*   Installing Exterior Lighting *"
+        print "*   Installing Exterior Lighting *"; self.build_time(.33)
         print "    Installing headlamp assembly"
         print "    Installing tail light assembly"
         print "    Installing side marker lights"
@@ -240,14 +245,14 @@ class Automobile(object):
         print "    Installing turn signal lights"
 
     def install_wheel_assembly(self):
-        print "*   Installing Wheel Assembly *"
+        print "*   Installing Wheel Assembly *"; self.build_time(.25)
         print "    Installing tires on wheels"
         print "    Mounting wheels"
 
     @set_state
     def add_fluids(self):
         self.post_chassis_assembled_event.wait()
-        print "*** Start adding fluids ***"
+        print "*** Start adding fluids ***"; self.build_time(.17)
         print "    Adding engine coolant"
         print "    Adding engine oil"
         print "    Adding transmission oil"
@@ -258,7 +263,7 @@ class Automobile(object):
     @set_state
     def test_drive(self):
         self.fluids_added_event.wait()
-        print "*** Start testing the automobile ***"
+        print "*** Start testing the automobile ***"; self.build_time(1.3)
         print "    Testing acceleration"
         print "    Testing cornering"
         print "    Testing breaking"
