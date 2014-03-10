@@ -44,3 +44,15 @@ class BuildAutoTest(unittest.TestCase):
         auto = Automobile('parallel')
         auto.build()
         self.assertEqual("Beep Beep", auto.build_state())
+
+    def test_engine_trans_frame_parallel_build_in_any_order(self):
+        auto = Automobile('parallel')
+        auto.build_frame()
+        self.assertEqual("frame built", auto.build_state())
+
+        auto.build_transmission()
+        self.assertEqual("transmission built", auto.build_state())
+
+        auto.build_engine()
+        self.assertEqual("engine built", auto.build_state())
+
