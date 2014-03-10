@@ -4,19 +4,26 @@ from sportscar import SportsCar
 
 class BuildSportsTest(unittest.TestCase):
     def test_auto_factory(self):
-        auto = SportsCar()
+        auto = SportsCar('serial')
         self.assertEqual("not started", auto.build_state())
 
     def test_build_auto(self):
-        auto = SportsCar()
+        auto = SportsCar('serial')
         auto.build_engine()
         self.assertEqual("engine built", auto.build_state())
 
-        auto.build_chassis()
-        self.assertEqual("chassis built", auto.build_state())
+        auto.build_transmission()
+        self.assertEqual("transmission built", auto.build_state())
 
-        auto.build_chassis()
-        self.assertEqual("chassis built", auto.build_state())
+        auto.build_frame()
+        self.assertEqual("frame built", auto.build_state())
+
+        auto.build_chassis_part1()
+        self.assertEqual("chassis part 1 built", auto.build_state())
+        auto.build_chassis_part2()
+        self.assertEqual("chassis part 2 built", auto.build_state())
+        auto.build_chassis_part3()
+        self.assertEqual("chassis part 3 built", auto.build_state())
 
         auto.post_chassis_assembly()
         self.assertEqual("post chassis assembly complete", auto.build_state())
@@ -27,7 +34,12 @@ class BuildSportsTest(unittest.TestCase):
         auto.test_drive()
         self.assertEqual("Vroom Vroom", auto.build_state())
 
-    def test_build(self):
-        auto = SportsCar()
+    def test_build_serial(self):
+        auto = SportsCar('serial')
+        auto.build()
+        self.assertEqual("Vroom Vroom", auto.build_state())
+
+    def test_build_parallel(self):
+        auto = SportsCar('parallel')
         auto.build()
         self.assertEqual("Vroom Vroom", auto.build_state())

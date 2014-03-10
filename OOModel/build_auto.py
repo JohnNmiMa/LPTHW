@@ -6,7 +6,7 @@ import sportscar
 
 def parse_options():
     parser = OptionParser()
-    parser.add_option("-t", "--type", dest="type", help="Type of automobile to build: 'car','sports'")
+    parser.add_option("-t", "--type", dest="type", help="Type of automobile to build: 'car','sportscar'")
     parser.add_option("-m", "--mode", dest="mode", help="Build automobile in: 'parallel' or 'serial'")
     (options,args) = parser.parse_args()
     if (not options.type):
@@ -17,10 +17,12 @@ def parse_options():
 
 options = parse_options()
 mode = options['mode'].lower()
-if options['type'].lower() == 'sports'.lower():
+if options['type'].lower() == 'sportscar'.lower():
     auto = sportscar.SportsCar(mode)
-else:
+elif options['type'].lower() == 'car'.lower():
     auto = automobile.Automobile(mode)
+else:
+    sys.exit("Can't build unknown car type {!r}".format(options['type']))
 
 auto.build()
 
