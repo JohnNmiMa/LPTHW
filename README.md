@@ -1,4 +1,4 @@
-Here are the practice exercises code for the LPTHW online Python class.
+### Here are the practice exercises code for the LPTHW (Learn Python The Hard Way) online Python class. LPTHW was offered as part of the Thinkful.com PIP (Programming in Python) class.
 
 1. **firstprog.py, numbers.py, printing.py, morePrinting.py** - printing
 1. **printingSquared.py** - printing formatters
