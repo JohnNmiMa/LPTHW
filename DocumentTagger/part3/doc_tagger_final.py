@@ -109,6 +109,7 @@ class TextFiles:
 
 def main(argv=sys.argv):
     options = parse_options()
+    print "options['keywords'] = {}".format(options['keywords'])
     for textdict in TextFiles(options['directory']):
         dr = DocumentReporter(options['keywords'], textdict)
         dr.report()
