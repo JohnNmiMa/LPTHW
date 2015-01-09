@@ -1,6 +1,6 @@
 ### Here are the practice exercises for the LPTHW (Learn Python The Hard Way) online Python class. LPTHW was offered as part of the Thinkful.com PIP (Programming in Python) class.
 
-1. **firstprog.py, numbers.py, printing.py, morePrinting.py** - printing
+1. **firstprog.py, numbers.py, printing.py, morePrinting.py** - printing in Python
 1. **printingSquared.py** - printing formatters
 1. **printing.Cubed.py** - tripple quote formatting operator
 1. **escapes.py** - escaping characters in printing
